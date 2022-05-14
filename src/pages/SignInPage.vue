@@ -34,6 +34,8 @@ export default defineComponent({
 
     const login = () => {
       const auth = getAuth();
+      auth.languageCode = "pt-BR";
+
       // need .value because of ref()
       signInWithEmailAndPassword(auth, email.value, password.value)
         // we have a Promise here, so we need to use .then()
@@ -63,14 +65,13 @@ export default defineComponent({
 
     const signInWithGoogle = () => {
       const provider = new GoogleAuthProvider();
-      signInWithPopup(getAuth(), provider)
+      const auth = getAuth();
+      auth.languageCode = "pt-BR";
+      signInWithPopup(auth, provider)
         .then((result) => {
           console.log("signInWithGoogle.result", result);
-          console.log(
-            "signInWithGoogle.auth.currentUser",
-            getAuth().currentUser
-          );
-          store.user = getAuth().currentUser;
+          console.log("signInWithGoogle.auth.currentUser", auth.currentUser);
+          store.user = auth.currentUser;
           router.push("feed");
         })
         .catch((error) => {
