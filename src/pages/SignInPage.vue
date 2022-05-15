@@ -14,6 +14,9 @@
 import { useCounterStore } from "stores/counter";
 import { useRouter } from "vue-router";
 import { defineComponent, ref } from "vue";
+
+const user = ref(null);
+
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -21,16 +24,20 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 
+import { setDoc, doc } from "firebase/firestore/lite";
+import useFirebase from "boot/firebaseConnection";
+
 const email = ref("");
 const password = ref("");
 const errMsg = ref("");
 
 export default defineComponent({
-  name: "RegisterPage",
+  name: "SignInPage",
 
   setup() {
     const store = useCounterStore();
     const router = useRouter();
+    const firebase = useFirebase();
 
     const login = () => {
       const auth = getAuth();
@@ -44,6 +51,11 @@ export default defineComponent({
           console.log("register.auth.currentUser", auth.currentUser);
           console.log("Success login");
           store.user = auth.currentUser;
+
+          const userRef = doc(firebase.firebaseDb, "users", "Luiz");
+          const setdoc = setDoc(userRef, { name: "Luiz" }, { online: true });
+          console.log("setDoc", setdoc);
+
           router.push("feed");
         })
         .catch((error) => {
@@ -71,7 +83,20 @@ export default defineComponent({
         .then((result) => {
           console.log("signInWithGoogle.result", result);
           console.log("signInWithGoogle.auth.currentUser", auth.currentUser);
+
+          user.value = auth.currentUser;
           store.user = auth.currentUser;
+
+          console.log("user", user);
+          const userRef = doc(firebase.firebaseDb, "users", user.value.uid);
+          const setdoc = setDoc(userRef, {
+            name: user.value.displayName,
+            phone: user.value.phoneNumber,
+            photo: user.value.photoURL,
+            online: true,
+          });
+          console.log("setDoc", setdoc);
+
           router.push("feed");
         })
         .catch((error) => {

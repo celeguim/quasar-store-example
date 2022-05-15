@@ -26,6 +26,7 @@ export default defineComponent({
 
   setup() {
     const router = useRouter();
+
     const register = () => {
       const auth = getAuth();
       // need .value because of ref()
@@ -34,15 +35,14 @@ export default defineComponent({
         .then((data) => {
           console.log("register.data", data);
           console.log("register.auth.currentUser", auth.currentUser);
-          router.push("/");
+          router.push("feed");
         })
         .catch((error) => {
           console.log("register.error", error);
           alert(error.message);
         });
-
-      router.push("/");
     };
+
     const signInWithGoogle = () => {
       const provider = new GoogleAuthProvider();
       signInWithPopup(getAuth(), provider)
@@ -52,13 +52,12 @@ export default defineComponent({
             "signInWithGoogle.auth.currentUser",
             getAuth().currentUser
           );
-          router.push("/");
+          router.push("feed");
         })
         .catch((error) => {
           console.log("signInWithGoogle.error", error);
           alert(error.message);
         });
-      router.push("feed");
     };
 
     return {

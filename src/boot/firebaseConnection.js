@@ -22,14 +22,6 @@ const firebaseAuth = getAuth(firebaseApp);
 const firebaseDb = getFirestore(firebaseApp);
 //console.log(firebaseDb);
 
-// onAuthStateChanged(auth, (user) => {
-//   if (user) {
-//     console.log("firebaseConnection.onAuthStateChanged().user", user);
-//   } else {
-//     user = null;
-//   }
-// });
-
 export { firebaseDb };
 
 export default function firebase() {
